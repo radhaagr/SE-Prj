@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block content %}
+
+<body>
+
+  <form>
+  <div>
+
+  <div class="line"></div>
+
+    <table border="2" cellpadding="3" cellspacing="1" align="center">
+      <tr>
+        <td style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span>Total Capacity</span>
+        </td>
+        <td bgcolor="#5DBCD2" style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span id="total_slots">{{pl_total_slots}}</span>
+            <!--<button type="button" class="btn btn-info" id="empty_slot">{{pl_empty_slots}}</button>-->
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span>Empty Slots</span>
+        </td>
+        <td bgcolor="#5DBCD2" style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span id="empty_slot">{{pl_empty_slots}}</span>
+            <!--<button type="button" class="btn btn-info" id="empty_slot">{{pl_empty_slots}}</button>-->
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span>Current Average Price</span>
+        </td>
+        <td bgcolor="#5DBCD2" style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span id="hourlyavgprice">{{fourHourAvg}}</span>
+            <!--<button type="button" class="btn btn-info" id="empty_slot">{{pl_empty_slots}}</button>-->
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span>Daily Average Price</span>
+        </td>
+        <td bgcolor="#5DBCD2" style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span id="dailyavgprice">{{oneDayAvg}}</span>
+            <!--<button type="button" class="btn btn-info" id="empty_slot">{{pl_empty_slots}}</button>-->
+        </td>
+      </tr>
+      <tr>
+        <td style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span>Weekly Average Price</span>
+        </td>
+        <td bgcolor="#5DBCD2" style="text-align: center; font-size:72px; padding-left:20px; padding-right:20px">
+            <span id="weeklyavgprice">{{twoDayAvg}}</span>
+            <!--<button type="button" class="btn btn-info" id="empty_slot">{{pl_empty_slots}}</button>-->
+        </td>
+      </tr>
+    </table>
+
+  </div>
+  </form>
+
+  <script type="text/javascript" charset="utf-8">
+    var socket = io.connect();
+    // verify our websocket connection is established
+    socket.on('connect', function() {
+          console.log("connected");
+    });
+
+    socket.on('PL_Message', function(data) {
+          console.log(data);
+          document.getElementById("empty_slot").innerHTML = data.pl_empty_slots;
+    });
+
+    socket.on('Charge_Message', function(data) {
+          console.log(data);
+          document.getElementById("hourlyavgprice").innerHTML = data.fourHourAvg;
+          document.getElementById("dailyavgprice").innerHTML = data.oneDayAvg;
+          document.getElementById("weeklyavgprice").innerHTML = data.twoDayAvg;
+    });
+
+  </script>
+
+</body>
+
+{% endblock %}
